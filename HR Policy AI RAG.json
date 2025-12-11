@@ -1,0 +1,497 @@
+{
+    "name": "HR Policy AI Agents",
+    "nodes": [
+      {
+        "parameters": {},
+        "type": "n8n-nodes-base.manualTrigger",
+        "typeVersion": 1,
+        "position": [
+          0,
+          0
+        ],
+        "id": "8894b563-5508-4240-acd5-c9d3de0ce124",
+        "name": "When clicking ‘Execute workflow’"
+      },
+      {
+        "parameters": {
+          "operation": "download",
+          "fileId": {
+            "__rl": true,
+            "value": "1Nq4NDIWXhOU7UswIFPI1FkzV-ghLelg5",
+            "mode": "list",
+            "cachedResultName": "google-hr-poliyc.pdf",
+            "cachedResultUrl": "https://drive.google.com/file/d/1Nq4NDIWXhOU7UswIFPI1FkzV-ghLelg5/view?usp=drivesdk"
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.googleDrive",
+        "typeVersion": 3,
+        "position": [
+          208,
+          0
+        ],
+        "id": "6924b23c-ffa1-46c5-b2c1-d2a6cdce7d61",
+        "name": "Download file",
+        "credentials": {
+          "googleDriveOAuth2Api": {
+            "id": "TNqsWCn3qdoyMQMA",
+            "name": "Google Drive account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "operation": "pdf",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.extractFromFile",
+        "typeVersion": 1.1,
+        "position": [
+          416,
+          0
+        ],
+        "id": "13a82c6f-9e45-47e7-a46f-0d53e69d86c0",
+        "name": "Extract from File"
+      },
+      {
+        "parameters": {
+          "jsCode": "// paragraph-chunker for n8n Code node\n// Runs once for all input items ($input.all())\n\nconst maxChars = 1000; // change this to suit your desired chunk size\n\nconst items = $input.all(); // all incoming items from previous node\nconst out = [];\n\nfunction splitIntoParagraphs(text) {\n  if (!text || typeof text !== 'string') return [];\n  // First try splitting on multiple newlines (true paragraphs)\n  let paragraphs = text.split(/\\r?\\n\\s*\\r?\\n+/).map(p => p.trim()).filter(Boolean);\n  // If we got just one long paragraph, try splitting on single newline as fallback\n  if (paragraphs.length === 1) {\n    paragraphs = text.split(/\\r?\\n+/).map(p => p.trim()).filter(Boolean);\n  }\n  return paragraphs;\n}\n\nfor (let sourceIndex = 0; sourceIndex < items.length; sourceIndex++) {\n  const item = items[sourceIndex];\n  // common field from ExtractPDF node is `text` — try that, then try other likely keys\n  const rawText = item.json?.text ?? item.json?.content ?? item.json?.parsedText ?? \"\";\n\n  const paragraphs = splitIntoParagraphs(rawText);\n\n  // If no paragraphs found but text exists, treat whole text as single paragraph\n  if (paragraphs.length === 0 && rawText) paragraphs.push(rawText.trim());\n\n  // Create chunks by concatenating paragraphs until we exceed maxChars\n  const chunks = [];\n  let current = \"\";\n\n  for (let p of paragraphs) {\n    // if a single paragraph is longer than maxChars, split it into smaller pieces\n    if (p.length > maxChars) {\n      // flush current chunk first\n      if (current) {\n        chunks.push(current.trim());\n        current = \"\";\n      }\n      // split long paragraph into sub-chunks by sentences or by fixed width fallback\n      const sentences = p.match(/[^.!?]+[.!?]*/g) ?? [p];\n      let sub = \"\";\n      for (let s of sentences) {\n        if ((sub + \" \" + s).trim().length > maxChars) {\n          if (sub) {\n            chunks.push(sub.trim());\n            sub = s.trim();\n          } else {\n            // sentence itself bigger than maxChars -> hard split\n            for (let i = 0; i < s.length; i += maxChars) {\n              chunks.push(s.slice(i, i + maxChars).trim());\n            }\n            sub = \"\";\n          }\n        } else {\n          sub = (sub + \" \" + s).trim();\n        }\n      }\n      if (sub) chunks.push(sub.trim());\n      continue;\n    }\n\n    if ((current + \"\\n\\n\" + p).trim().length <= maxChars && current.length > 0) {\n      current = (current + \"\\n\\n\" + p).trim();\n    } else if (!current) {\n      current = p;\n    } else {\n      // current non-empty and adding p would exceed limit -> push current and start new\n      chunks.push(current.trim());\n      current = p;\n    }\n  }\n\n  if (current) chunks.push(current.trim());\n\n  const total = chunks.length;\n\n  // push each chunk as its own n8n item\n  for (let i = 0; i < chunks.length; i++) {\n    out.push({\n      json: {\n        chunk_index: i,\n        chunk_text: chunks[i],\n        total_chunks_for_source: total,\n        source_item_index: sourceIndex,\n        source_item_id: item.json?.id ?? item.json?.fileName ?? null,\n        original_paragraph_count: paragraphs.length,\n        // keep original meta if you want:\n        // original_meta: item.json\n      }\n    });\n  }\n}\n\n// return array of items (one per chunk)\nreturn out;\n"
+        },
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          624,
+          0
+        ],
+        "id": "430c1372-941a-4749-8cb7-7fafb6f06c63",
+        "name": "Code in JavaScript"
+      },
+      {
+        "parameters": {
+          "mode": "insert",
+          "pineconeIndex": {
+            "__rl": true,
+            "value": "hr-policy",
+            "mode": "list",
+            "cachedResultName": "hr-policy"
+          },
+          "options": {}
+        },
+        "type": "@n8n/n8n-nodes-langchain.vectorStorePinecone",
+        "typeVersion": 1.3,
+        "position": [
+          832,
+          0
+        ],
+        "id": "4e30c99e-5cba-4855-9b95-78d261527cd5",
+        "name": "Pinecone Vector Store",
+        "credentials": {
+          "pineconeApi": {
+            "id": "aeWCSF75EyFNZ9q1",
+            "name": "PineconeApi account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "options": {}
+        },
+        "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+        "typeVersion": 1.2,
+        "position": [
+          720,
+          208
+        ],
+        "id": "ea95190d-af5a-49d7-9a4f-d321dcd36d95",
+        "name": "Embeddings OpenAI",
+        "credentials": {
+          "openAiApi": {
+            "id": "XtlBMqbnJa0IjIYI",
+            "name": "OpenAi account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "options": {}
+        },
+        "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+        "typeVersion": 1.1,
+        "position": [
+          976,
+          208
+        ],
+        "id": "f0ef2a81-5689-4b86-9f21-5c7e94b25b46",
+        "name": "Default Data Loader"
+      },
+      {
+        "parameters": {
+          "content": "### Paragraph Based Chunking for HR Document",
+          "height": 416,
+          "width": 1264
+        },
+        "type": "n8n-nodes-base.stickyNote",
+        "position": [
+          -80,
+          -80
+        ],
+        "typeVersion": 1,
+        "id": "51fe4fab-7f94-4409-bbae-30a5df34536e",
+        "name": "Sticky Note"
+      },
+      {
+        "parameters": {
+          "trigger": [
+            "message"
+          ],
+          "channelId": {
+            "__rl": true,
+            "value": "C0A390E0G65",
+            "mode": "list",
+            "cachedResultName": "hr-policy-ai"
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.slackTrigger",
+        "typeVersion": 1,
+        "position": [
+          -48,
+          448
+        ],
+        "id": "c5199bc7-2283-4d2c-bd2f-be82afb665a8",
+        "name": "Slack Trigger",
+        "webhookId": "2bbc626b-7a22-4cfe-a346-5f9f452e375b",
+        "credentials": {
+          "slackApi": {
+            "id": "lPvj3fR2A2XobM8j",
+            "name": "Slack account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "includeOtherFields": true,
+          "options": {}
+        },
+        "type": "n8n-nodes-base.set",
+        "typeVersion": 3.4,
+        "position": [
+          368,
+          448
+        ],
+        "id": "1c71cbe3-7525-4e18-87eb-f157a3f49127",
+        "name": "Edit Fields"
+      },
+      {
+        "parameters": {
+          "promptType": "define",
+          "text": "=User question: {{ $json.text }}\n\nTask:\n1) Read ONLY the Pinecone tool results above. If they answer the question, copy the exact sentence(s) (quote up to 2 lines).\n2) Then write a 2–4 sentence summary answering the user's question.\nIf the tool results do not answer, reply exactly:\nIf it answers the question, quote ONE short line (≤20 words) from it, then give a 1–2 sentence summary (overall ≤40 words).\n\n\"I couldn't find enough information in the HR Policy database to answer this accurately. If you can provide more details (department, country, or policy name), I can search again.\"\n\nplease call pinecone vector tool to get relevant information to help answer the user",
+          "options": {
+            "systemMessage": "=You are the HR Policy Assistant. ALWAYS answer using only retrieved policy text. Respond in a friendly, human tone.\n\nConstraints:\n• Keep final answer to 1–2 short sentences (no more than 40 words).\n• If the policy text contains the answer, quote one short line (≤ 20 words), then add a 1–2 sentence summary.\n• If the policy text is insufficient, reply exactly:\n  \"I couldn't find enough information in the HR Policy database to answer this accurately. Please provide department, country, or policy name.\"\n\nDo NOT append any workflow signatures (do not output 'Automated with this n8n workflow').\n"
+          }
+        },
+        "type": "@n8n/n8n-nodes-langchain.agent",
+        "typeVersion": 3,
+        "position": [
+          576,
+          448
+        ],
+        "id": "5b9d2fd2-605c-46fd-94be-0af51f31110b",
+        "name": "AI Agent"
+      },
+      {
+        "parameters": {
+          "model": {
+            "__rl": true,
+            "mode": "list",
+            "value": "gpt-4.1-mini"
+          },
+          "builtInTools": {},
+          "options": {}
+        },
+        "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+        "typeVersion": 1.3,
+        "position": [
+          448,
+          656
+        ],
+        "id": "5121d318-a80c-4507-bf52-b8458082d5a3",
+        "name": "OpenAI Chat Model",
+        "credentials": {
+          "openAiApi": {
+            "id": "XtlBMqbnJa0IjIYI",
+            "name": "OpenAi account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "sessionIdType": "customKey",
+          "sessionKey": "={{ $('Edit Fields').item.json.user || $('Edit Fields').item.json.sessionId }}"
+        },
+        "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+        "typeVersion": 1.3,
+        "position": [
+          592,
+          656
+        ],
+        "id": "9bd3d9fa-7983-4e5b-8a7b-c6d083117467",
+        "name": "Simple Memory"
+      },
+      {
+        "parameters": {
+          "mode": "retrieve-as-tool",
+          "toolDescription": "=This tool retrieves the most relevant HR policy text chunks from the Pinecone vector store. \nUse this tool whenever you need information from the HR Policy knowledgebase.\n\nInput: A question or a query extracted from the user’s message. - {{ $json.text }}\nOutput: A list of the top matching policy chunks, including their text and metadata. \n\nAlways use this tool before answering any HR-related question. \nBase your final answer ONLY on the retrieved documents. Do not guess or create new policies.\n ",
+          "pineconeIndex": {
+            "__rl": true,
+            "value": "hr-policy",
+            "mode": "list",
+            "cachedResultName": "hr-policy"
+          },
+          "options": {}
+        },
+        "type": "@n8n/n8n-nodes-langchain.vectorStorePinecone",
+        "typeVersion": 1.3,
+        "position": [
+          800,
+          672
+        ],
+        "id": "e3bbd6c1-7561-4e76-af83-dbe6bc611ce8",
+        "name": "Pinecone Vector Store1",
+        "credentials": {
+          "pineconeApi": {
+            "id": "aeWCSF75EyFNZ9q1",
+            "name": "PineconeApi account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "options": {}
+        },
+        "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+        "typeVersion": 1.2,
+        "position": [
+          672,
+          864
+        ],
+        "id": "602f0ad7-fb26-4665-b021-dedd732f8798",
+        "name": "Embeddings OpenAI1",
+        "credentials": {
+          "openAiApi": {
+            "id": "XtlBMqbnJa0IjIYI",
+            "name": "OpenAi account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "select": "channel",
+          "channelId": {
+            "__rl": true,
+            "value": "C0A390E0G65",
+            "mode": "list",
+            "cachedResultName": "hr-policy-ai"
+          },
+          "text": "={{ $json.output }}",
+          "otherOptions": {}
+        },
+        "type": "n8n-nodes-base.slack",
+        "typeVersion": 2.4,
+        "position": [
+          1008,
+          448
+        ],
+        "id": "af6c2b60-18f0-430b-bedf-a9d8e86dd93f",
+        "name": "Send a message",
+        "webhookId": "e988ae76-25eb-4140-a3be-376c4af1f257",
+        "credentials": {
+          "slackApi": {
+            "id": "lPvj3fR2A2XobM8j",
+            "name": "Slack account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "jsCode": "// Code node (no static storage) - simple filter only\nconst payloads = $input.all(); // array of incoming items\nconst out = [];\n\nconst WORKFLOW_SIGNATURE = \"Automated with this n8n workflow\";\n\nfor (const p of payloads) {\n  const payload = p.json ?? {};\n  const event = payload.event ?? payload;\n\n  // ignore bot-origin messages\n  if (event.bot_id || event.subtype === 'bot_message') continue;\n\n  // ignore replies from the workflow (by signature)\n  const text = event.text || \"\";\n  if (typeof text === 'string' && text.includes(WORKFLOW_SIGNATURE)) continue;\n\n  out.push({ json: payload }); // pass the original payload forward\n}\n\nreturn out;\n"
+        },
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          160,
+          448
+        ],
+        "id": "e4dc0c18-8e22-45c5-bf10-6cea5cf92947",
+        "name": "Code in JavaScript1"
+      }
+    ],
+    "pinData": {},
+    "connections": {
+      "When clicking ‘Execute workflow’": {
+        "main": [
+          [
+            {
+              "node": "Download file",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Download file": {
+        "main": [
+          [
+            {
+              "node": "Extract from File",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Extract from File": {
+        "main": [
+          [
+            {
+              "node": "Code in JavaScript",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Code in JavaScript": {
+        "main": [
+          [
+            {
+              "node": "Pinecone Vector Store",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Embeddings OpenAI": {
+        "ai_embedding": [
+          [
+            {
+              "node": "Pinecone Vector Store",
+              "type": "ai_embedding",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Default Data Loader": {
+        "ai_document": [
+          [
+            {
+              "node": "Pinecone Vector Store",
+              "type": "ai_document",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Slack Trigger": {
+        "main": [
+          [
+            {
+              "node": "Code in JavaScript1",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Edit Fields": {
+        "main": [
+          [
+            {
+              "node": "AI Agent",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "OpenAI Chat Model": {
+        "ai_languageModel": [
+          [
+            {
+              "node": "AI Agent",
+              "type": "ai_languageModel",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Simple Memory": {
+        "ai_memory": [
+          [
+            {
+              "node": "AI Agent",
+              "type": "ai_memory",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Pinecone Vector Store1": {
+        "ai_tool": [
+          [
+            {
+              "node": "AI Agent",
+              "type": "ai_tool",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Embeddings OpenAI1": {
+        "ai_embedding": [
+          [
+            {
+              "node": "Pinecone Vector Store1",
+              "type": "ai_embedding",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "AI Agent": {
+        "main": [
+          [
+            {
+              "node": "Send a message",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Code in JavaScript1": {
+        "main": [
+          [
+            {
+              "node": "Edit Fields",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "active": true,
+    "settings": {
+      "executionOrder": "v1"
+    },
+    "versionId": "73a82e2b-2f4c-4101-b250-80df6c4ef823",
+    "meta": {
+      "templateCredsSetupCompleted": true,
+      "instanceId": "31f834f3cab84b2897a173b5f0543f5510ad86d7ece73c72323ae3ec4cec90cf"
+    },
+    "id": "XSpJkPEWbYVb7gEg",
+    "tags": []
+  }
