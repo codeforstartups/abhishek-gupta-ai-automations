@@ -1,0 +1,2345 @@
+{
+  "name": "Helios Prime",
+  "nodes": [
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini",
+          "cachedResultName": "gpt-4.1-mini"
+        },
+        "options": {}
+      },
+      "id": "12995726-ea08-4188-a192-5b1874a91b59",
+      "name": "OpenAI Chat Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "position": [
+        4464,
+        -352
+      ],
+      "typeVersion": 1.2,
+      "credentials": {
+        "openAiApi": {
+          "id": "XtlBMqbnJa0IjIYI",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('Telegram Trigger').item.json.message.chat.username }}"
+      },
+      "id": "402c25a0-30ee-4df8-891e-ca4e86b1c869",
+      "name": "Simple Memory",
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "position": [
+        4624,
+        -352
+      ],
+      "typeVersion": 1.3
+    },
+    {
+      "parameters": {
+        "endpointUrl": "https://skugal.app.n8n.cloud/mcp/906a5e01-3f46-444e-a3b7-51d2105eac16/sse",
+        "options": {}
+      },
+      "id": "43c3736b-8908-42c1-a386-ea58a417d33d",
+      "name": "Gmail MCP",
+      "type": "@n8n/n8n-nodes-langchain.mcpClientTool",
+      "position": [
+        4832,
+        -352
+      ],
+      "typeVersion": 1.1
+    },
+    {
+      "parameters": {
+        "endpointUrl": "https://skugal.app.n8n.cloud/mcp/7bf1c961-4feb-4c31-919e-ff300c40406d",
+        "options": {}
+      },
+      "id": "f5064376-993c-49b6-a44a-d96166b29113",
+      "name": "Google Tasks MCP",
+      "type": "@n8n/n8n-nodes-langchain.mcpClientTool",
+      "position": [
+        5328,
+        -352
+      ],
+      "typeVersion": 1.1
+    },
+    {
+      "parameters": {
+        "path": "906a5e01-3f46-444e-a3b7-51d2105eac16"
+      },
+      "id": "30367634-10c5-45ed-96f0-3162e184522e",
+      "name": "Gmail MCP Server",
+      "type": "@n8n/n8n-nodes-langchain.mcpTrigger",
+      "position": [
+        6016,
+        -192
+      ],
+      "webhookId": "906a5e01-3f46-444e-a3b7-51d2105eac16",
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('To', ``, 'string') }}",
+        "subject": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Subject', ``, 'string') }}",
+        "message": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Message', ``, 'string') }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "id": "b286623e-cd00-4aea-a0ac-06e33ceb0c94",
+      "name": "Send Email",
+      "type": "n8n-nodes-base.gmailTool",
+      "position": [
+        5952,
+        32
+      ],
+      "webhookId": "b5692bdd-471a-4141-8710-b0909a433939",
+      "typeVersion": 2.1,
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "joiQXUeF0WPbHW6N",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Reply to an email message. AI-configurable parameters: Message_ID (string) - the ID of the message; Message (string) - the reply content; Attachment_Field_Name (string) - input field name containing attachments; BCC (string) - comma-separated BCC recipients; CC (string) - comma-separated CC recipients.",
+        "operation": "reply",
+        "messageId": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Message_ID', ``, 'string') }}",
+        "emailType": "text",
+        "message": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Message', ``, 'string') }}",
+        "options": {
+          "appendAttribution": false,
+          "attachmentsUi": {
+            "attachmentsBinary": [
+              {
+                "property": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Attachment_Field_Name', ``, 'string') }}"
+              }
+            ]
+          },
+          "bccList": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('BCC', ``, 'string') }}",
+          "ccList": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('CC', ``, 'string') }}"
+        }
+      },
+      "id": "9f3a292c-2e1c-44f4-aa53-5b2062f2c009",
+      "name": "Reply to an Email",
+      "type": "n8n-nodes-base.gmailTool",
+      "position": [
+        6352,
+        32
+      ],
+      "webhookId": "3fda5336-8c0d-426c-abf4-e614cadbcc12",
+      "typeVersion": 2.1,
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "joiQXUeF0WPbHW6N",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Retrieve multiple email messages based on filters. AI-configurable parameters: Return_All (boolean) - whether to return all matching messages; Search (string) - Gmail query string to filter messages; Received_After (string) - datetime (RFC3339) after which messages are received; Received_Before (string) - datetime before which messages are received; Sender (string) - email address of the sender.",
+        "operation": "getAll",
+        "returnAll": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Return_All', ``, 'boolean') }}",
+        "filters": {
+          "q": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Search', ``, 'string') }}",
+          "receivedAfter": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Received_After', ``, 'string') }}",
+          "receivedBefore": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Received_Before', ``, 'string') }}"
+        }
+      },
+      "id": "ee576027-a714-4438-9339-5299d507ea32",
+      "name": "Get Emails",
+      "type": "n8n-nodes-base.gmailTool",
+      "position": [
+        5696,
+        32
+      ],
+      "webhookId": "35b2c37f-1e18-4fec-a442-3f672e8d839c",
+      "typeVersion": 2.1,
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "joiQXUeF0WPbHW6N",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "=Add one or more labels to an email message. AI-configurable parameters: Message_ID (string) - the ID of the message to label; Label_Names_or_IDs (string) - comma-separated label names or IDs to apply.",
+        "operation": "addLabels",
+        "messageId": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Message_ID', ``, 'string') }}",
+        "labelIds": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Label_Names_or_IDs', ``, 'string') }}"
+      },
+      "id": "7b0db469-61a0-4b77-87d9-c09933837cba",
+      "name": "Add Label to Email",
+      "type": "n8n-nodes-base.gmailTool",
+      "position": [
+        6512,
+        32
+      ],
+      "webhookId": "e985e162-2fb5-480a-9c72-5bd5b62876df",
+      "typeVersion": 2.1,
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "joiQXUeF0WPbHW6N",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Retrieve a list of labels. AI-configurable parameters: Return_All (boolean) - whether to return all labels.",
+        "resource": "label",
+        "returnAll": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Return_All', ``, 'boolean') }}"
+      },
+      "id": "31588295-e98b-4ec6-b373-110c170f1ce3",
+      "name": "Get Labels",
+      "type": "n8n-nodes-base.gmailTool",
+      "position": [
+        5824,
+        32
+      ],
+      "webhookId": "4bffaaac-3a2e-4cdb-8809-69a2ea942d7b",
+      "typeVersion": 2.1,
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "joiQXUeF0WPbHW6N",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "=Create an email draft. AI-configurable parameters: Subject (string) - the subject of the draft; Message (string) - the body of the draft; Attachment_Field_Name__in_Input_ (string) - input field name containing attachments; BCC (string) - comma-separated BCC recipients; CC (string) - comma-separated CC recipients.",
+        "resource": "draft",
+        "subject": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Subject', ``, 'string') }}",
+        "emailType": "html",
+        "message": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Message', ``, 'string') }}",
+        "options": {
+          "bccList": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('BCC', ``, 'string') }}",
+          "ccList": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('CC', ``, 'string') }}",
+          "sendTo": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('To_Email', ``, 'string') }}"
+        }
+      },
+      "id": "2737d95b-72a5-449d-a3bd-653cafe15c0e",
+      "name": "Draft Email",
+      "type": "n8n-nodes-base.gmailTool",
+      "position": [
+        6080,
+        32
+      ],
+      "webhookId": "89cfafeb-e670-46e1-a5c2-f0a0e3ad0332",
+      "typeVersion": 2.1,
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "joiQXUeF0WPbHW6N",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Draft a reply to an email. Use the thread_id parameter to pass the thread for which the email must be drafted",
+        "resource": "draft",
+        "subject": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Subject', ``, 'string') }}",
+        "emailType": "html",
+        "message": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Message', ``, 'string') }}",
+        "options": {
+          "bccList": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('BCC', ``, 'string') }}",
+          "ccList": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('CC', ``, 'string') }}",
+          "threadId": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Thread_ID', ``, 'string') }}"
+        }
+      },
+      "id": "468ad176-c4a3-4925-be52-0b1d1a1ed92d",
+      "name": "Draft Email Reply",
+      "type": "n8n-nodes-base.gmailTool",
+      "position": [
+        6208,
+        32
+      ],
+      "webhookId": "95797251-5c38-45f1-8203-377716c743bd",
+      "typeVersion": 2.1,
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "joiQXUeF0WPbHW6N",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Check if a slot is available on my calendar",
+        "resource": "calendar",
+        "calendar": {
+          "__rl": true,
+          "value": "codeforstartups@gmail.com",
+          "mode": "list",
+          "cachedResultName": "codeforstartups@gmail.com"
+        },
+        "timeMin": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Start_Time', ``, 'string') }}",
+        "timeMax": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('End_Time', ``, 'string') }}",
+        "options": {
+          "timezone": {
+            "__rl": true,
+            "mode": "list",
+            "value": "Asia/Kolkata",
+            "cachedResultName": "Asia/Kolkata"
+          }
+        }
+      },
+      "id": "bd29ad7e-7b07-43c9-8598-9c69c3db2ee1",
+      "name": "Check Availability",
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "position": [
+        5392,
+        32
+      ],
+      "typeVersion": 1.3,
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "CGL4XJ2N3P8utIlV",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Get future events on Google Calendar",
+        "operation": "getAll",
+        "calendar": {
+          "__rl": true,
+          "value": "codeforstartups@gmail.com",
+          "mode": "list",
+          "cachedResultName": "codeforstartups@gmail.com"
+        },
+        "returnAll": true,
+        "timeMin": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('After', `Should be a future date and time`, 'string') }}",
+        "timeMax": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Before', ``, 'string') }}",
+        "options": {
+          "orderBy": "startTime",
+          "recurringEventHandling": "expand",
+          "timeZone": {
+            "__rl": true,
+            "mode": "list",
+            "value": "Asia/Kolkata",
+            "cachedResultName": "Asia/Kolkata"
+          }
+        }
+      },
+      "id": "db68933b-85e9-49ac-a8db-16b619854b4e",
+      "name": "Get all Events",
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "position": [
+        5008,
+        48
+      ],
+      "typeVersion": 1.3,
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "CGL4XJ2N3P8utIlV",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Delete Calendar Event",
+        "operation": "delete",
+        "calendar": {
+          "__rl": true,
+          "value": "codeforstartups@gmail.com",
+          "mode": "list",
+          "cachedResultName": "codeforstartups@gmail.com"
+        },
+        "eventId": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Event_ID', `Pass the event id of the event to delete`, 'string') }}",
+        "options": {}
+      },
+      "id": "0832afbe-7ced-4f08-908f-f2683cd407d2",
+      "name": "Delete Calendar Event",
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "position": [
+        5520,
+        48
+      ],
+      "typeVersion": 1.3,
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "CGL4XJ2N3P8utIlV",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Update an event on Google Calendar",
+        "operation": "update",
+        "calendar": {
+          "__rl": true,
+          "value": "codeforstartups@gmail.com",
+          "mode": "list",
+          "cachedResultName": "codeforstartups@gmail.com"
+        },
+        "eventId": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Event_ID', `Pass the id of the event to reschedule or update`, 'string') }}",
+        "useDefaultReminders": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Use_Default_Reminders', ``, 'boolean') }}",
+        "updateFields": {
+          "attendeesUi": {
+            "values": {
+              "mode": "replace",
+              "attendees": [
+                "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('attendees0_Attendees', ``, 'string') }}"
+              ]
+            }
+          },
+          "end": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('End', ``, 'string') }}",
+          "sendUpdates": "all",
+          "start": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Start', ``, 'string') }}"
+        }
+      },
+      "id": "5f209c89-fb4f-4a1b-8be5-ee25393e0117",
+      "name": "Reschedule Event",
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "position": [
+        5248,
+        32
+      ],
+      "typeVersion": 1.3,
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "CGL4XJ2N3P8utIlV",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Get an event in Google Calendar",
+        "operation": "get",
+        "calendar": {
+          "__rl": true,
+          "value": "codeforstartups@gmail.com",
+          "mode": "list",
+          "cachedResultName": "codeforstartups@gmail.com"
+        },
+        "eventId": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Event_ID', `Pass the event id`, 'string') }}",
+        "options": {}
+      },
+      "id": "d53a4648-e32b-4919-8c6a-187367fd2df0",
+      "name": "Get Event",
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "position": [
+        4864,
+        32
+      ],
+      "typeVersion": 1.3,
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "CGL4XJ2N3P8utIlV",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Create an event on Google Calendar",
+        "calendar": {
+          "__rl": true,
+          "value": "codeforstartups@gmail.com",
+          "mode": "list",
+          "cachedResultName": "codeforstartups@gmail.com"
+        },
+        "start": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Start', ``, 'string') }}",
+        "end": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('End', ``, 'string') }}",
+        "useDefaultReminders": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Use_Default_Reminders', ``, 'boolean') }}",
+        "additionalFields": {
+          "description": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Description', ``, 'string') }}",
+          "summary": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Summary', ``, 'string') }}",
+          "visibility": "default"
+        }
+      },
+      "id": "74bc1732-edd5-4959-ac55-324ec517d192",
+      "name": "Create an event",
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "position": [
+        5120,
+        48
+      ],
+      "typeVersion": 1.3,
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "CGL4XJ2N3P8utIlV",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "path": "64e72cc1-3df0-4090-9522-d534c3f245aa"
+      },
+      "id": "419b58d0-2d39-4c02-b049-39a5b9fcde06",
+      "name": "Calendar MCP Server",
+      "type": "@n8n/n8n-nodes-langchain.mcpTrigger",
+      "position": [
+        5136,
+        -176
+      ],
+      "webhookId": "64e72cc1-3df0-4090-9522-d534c3f245aa",
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "task": "MDM1NDg1NzcxMjIyNzg5NzQ1ODI6MDow",
+        "taskId": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Task_ID', `Pass the task_id of the task to be completed`, 'string') }}",
+        "updateFields": {
+          "completed": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Completion_Date', `Pass the date when the task is completed`, 'string') }}",
+          "status": "completed"
+        }
+      },
+      "id": "1cfc708f-d219-428c-aa77-4dbbcc8d5030",
+      "name": "Complete a Task",
+      "type": "n8n-nodes-base.googleTasksTool",
+      "position": [
+        4736,
+        32
+      ],
+      "typeVersion": 1,
+      "credentials": {
+        "googleTasksOAuth2Api": {
+          "id": "iDabG1QGngEqJdyT",
+          "name": "Google Tasks account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "path": "7bf1c961-4feb-4c31-919e-ff300c40406d"
+      },
+      "id": "ec9de618-b3e1-4b08-a80b-1c9055f3e3c6",
+      "name": "Task Manager MCP",
+      "type": "@n8n/n8n-nodes-langchain.mcpTrigger",
+      "position": [
+        4416,
+        -192
+      ],
+      "webhookId": "7bf1c961-4feb-4c31-919e-ff300c40406d",
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "id": "8c5d865a-1a01-496f-b872-13da17a778c9",
+      "name": "Telegram Trigger",
+      "type": "n8n-nodes-base.telegramTrigger",
+      "position": [
+        3744,
+        -576
+      ],
+      "webhookId": "6d90bff2-32dd-44fc-b11b-4217a615dfed",
+      "typeVersion": 1.2,
+      "credentials": {
+        "telegramApi": {
+          "id": "Vmzk5prcbuCbZygR",
+          "name": "Telegram account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "endpointUrl": "https://skugal.app.n8n.cloud/mcp/f226741c-0f79-4f23-96bf-d8eb47206bcf/sse",
+        "options": {}
+      },
+      "id": "587d7891-6409-4c55-82ab-bf40340a2594",
+      "name": "Finance Tracker",
+      "type": "@n8n/n8n-nodes-langchain.mcpClientTool",
+      "position": [
+        5056,
+        -352
+      ],
+      "typeVersion": 1.1
+    },
+    {
+      "parameters": {
+        "path": "f226741c-0f79-4f23-96bf-d8eb47206bcf"
+      },
+      "id": "690a85a4-798d-4949-96fb-66e119cc74ca",
+      "name": "Finance Manager MCP Server",
+      "type": "@n8n/n8n-nodes-langchain.mcpTrigger",
+      "position": [
+        3760,
+        -240
+      ],
+      "webhookId": "f226741c-0f79-4f23-96bf-d8eb47206bcf",
+      "typeVersion": 1.1,
+      "notes": "🚀 MCP TRIGGER\n\nThis is the entry point for AI interactions with Google Sheets. The MCP (Model Context Protocol) trigger allows AI models to call any of the connected Google Sheets tools based on user requests.\n\nKey Features:\n• Enables natural language spreadsheet commands\n• Routes AI requests to appropriate Sheets operations\n• Provides context-aware data management\n• Supports complex multi-step data workflows\n• Handles dynamic sheet and document selection"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1AdngjEji4MGf7gmPqH5H2jlYjJQ_OkuElbXJv1pexao",
+          "mode": "list",
+          "cachedResultName": "Expense",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1AdngjEji4MGf7gmPqH5H2jlYjJQ_OkuElbXJv1pexao/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1AdngjEji4MGf7gmPqH5H2jlYjJQ_OkuElbXJv1pexao/edit#gid=0"
+        },
+        "options": {}
+      },
+      "id": "df2bc845-19cf-430f-b022-00765fa8db90",
+      "name": "Get all Expenses",
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "position": [
+        3968,
+        -16
+      ],
+      "typeVersion": 4.6,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "isG7oenfolLaUvU8",
+          "name": "Google Sheets account"
+        }
+      },
+      "notes": "📊 READ SPREADSHEET DATA\n\nRetrieve and analyze data from Google Sheets. Perfect for AI to read, process, and extract insights from spreadsheet content.\n\nUse Cases:\n• \"Read data from the Sales sheet\"\n• \"Get all entries from A1:E100\"\n• \"Show me the data in the Budget spreadsheet\"\n• \"Extract customer information from the CRM sheet\"\n\nAI Parameters:\n• Document_ID: Target spreadsheet ID\n• Sheet_Name: Specific sheet tab name\n• Range: Cell range to read (optional)"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1AdngjEji4MGf7gmPqH5H2jlYjJQ_OkuElbXJv1pexao",
+          "mode": "list",
+          "cachedResultName": "Expense",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1AdngjEji4MGf7gmPqH5H2jlYjJQ_OkuElbXJv1pexao/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1AdngjEji4MGf7gmPqH5H2jlYjJQ_OkuElbXJv1pexao/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Amount": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Amount', ``, 'string') }}",
+            "Date": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Date', ``, 'string') }}",
+            "Categories": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Categories', ``, 'string') }}",
+            "Descriptions": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Descriptions', ``, 'string') }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Date",
+              "displayName": "Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Categories",
+              "displayName": "Categories",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Descriptions",
+              "displayName": "Descriptions",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Amount",
+              "displayName": "Amount",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "2bd5827f-80bd-46ab-8b96-f8994b07a200",
+      "name": "Create Expense",
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "position": [
+        3728,
+        -32
+      ],
+      "typeVersion": 4.6,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "isG7oenfolLaUvU8",
+          "name": "Google Sheets account"
+        }
+      },
+      "notes": "🗑️ CLEAR SPREADSHEET DATA\n\nRemove data from specific ranges or entire sheets. Useful for resetting data, clearing temporary calculations, or preparing sheets for new data.\n\nUse Cases:\n• \"Clear all data from the temp sheet\"\n• \"Remove entries from A1:E100\"\n• \"Clean up the old data in column C\"\n• \"Reset the calculation area\"\n\nAI Parameters:\n• Document_ID: Target spreadsheet ID\n• Sheet_Name: Sheet to clear data from\n• Range: Specific range to clear\n\n⚠️ Use with caution - data will be permanently removed!"
+    },
+    {
+      "parameters": {
+        "operation": "clear",
+        "documentId": {
+          "__rl": true,
+          "value": "1AdngjEji4MGf7gmPqH5H2jlYjJQ_OkuElbXJv1pexao",
+          "mode": "list",
+          "cachedResultName": "Expense",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1AdngjEji4MGf7gmPqH5H2jlYjJQ_OkuElbXJv1pexao/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1AdngjEji4MGf7gmPqH5H2jlYjJQ_OkuElbXJv1pexao/edit#gid=0"
+        },
+        "clear": "specificRows",
+        "startIndex": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Start_Row_Number', ``, 'number') }}",
+        "rowsToDelete": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Number_of_Rows_to_Delete', ``, 'number') }}"
+      },
+      "id": "3076047e-0bca-4014-a86d-a883003fadbe",
+      "name": "Delete Expense",
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "position": [
+        3840,
+        -16
+      ],
+      "typeVersion": 4.6,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "isG7oenfolLaUvU8",
+          "name": "Google Sheets account"
+        }
+      },
+      "notes": "➕ ADD NEW DATA\n\nAppend new rows of data to existing sheets. Perfect for adding records, logging events, or inserting new entries without affecting existing data.\n\nUse Cases:\n• \"Add a new customer to the CRM sheet\"\n• \"Log today's sales data\"\n• \"Insert a new project entry\"\n• \"Record the meeting notes\"\n\nAI Parameters:\n• Document_ID: Target spreadsheet ID\n• Sheet_Name: Sheet to add data to\n• Data_To_Add: Array/object of new data\n\nFeatures:\n• Automatically finds next empty row\n• Preserves existing data\n• Supports multiple columns"
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Get tasks from Google Tasks",
+        "operation": "getAll",
+        "task": "MDM1NDg1NzcxMjIyNzg5NzQ1ODI6MDow",
+        "returnAll": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Return_All', ``, 'boolean') }}",
+        "additionalFields": {
+          "showCompleted": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Show_Completed', ``, 'boolean') }}"
+        }
+      },
+      "id": "0635f261-0424-428d-8cf3-ee26f65cef94",
+      "name": "Get many Tasks",
+      "type": "n8n-nodes-base.googleTasksTool",
+      "position": [
+        4608,
+        32
+      ],
+      "typeVersion": 1,
+      "credentials": {
+        "googleTasksOAuth2Api": {
+          "id": "iDabG1QGngEqJdyT",
+          "name": "Google Tasks account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "delete",
+        "task": "MDM1NDg1NzcxMjIyNzg5NzQ1ODI6MDow",
+        "taskId": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Task_ID', ``, 'string') }}"
+      },
+      "id": "d2922cc7-a043-413b-87c2-f3dd00c2ac87",
+      "name": "Delete a Task",
+      "type": "n8n-nodes-base.googleTasksTool",
+      "position": [
+        4480,
+        32
+      ],
+      "typeVersion": 1,
+      "credentials": {
+        "googleTasksOAuth2Api": {
+          "id": "iDabG1QGngEqJdyT",
+          "name": "Google Tasks account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "task": "MDc0Mzg5MTY4OTg2NTMyODI2NzE6MDow",
+        "taskId": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Task_ID', ``, 'string') }}"
+      },
+      "id": "325283b2-c358-4ffb-9bb6-0e6f7244b6c1",
+      "name": "Get a Task",
+      "type": "n8n-nodes-base.googleTasksTool",
+      "position": [
+        4224,
+        32
+      ],
+      "typeVersion": 1,
+      "credentials": {
+        "googleTasksOAuth2Api": {
+          "id": "iDabG1QGngEqJdyT",
+          "name": "Google Tasks account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "task": "MDM1NDg1NzcxMjIyNzg5NzQ1ODI6MDow",
+        "title": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Title', ``, 'string') }}",
+        "additionalFields": {
+          "dueDate": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Due_Date', `Always use future dates`, 'string') }}",
+          "notes": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Notes', ``, 'string') }}"
+        }
+      },
+      "id": "42ad2163-66f2-4523-9d5d-ddc23c4faa84",
+      "name": "Create a Task",
+      "type": "n8n-nodes-base.googleTasksTool",
+      "position": [
+        4352,
+        32
+      ],
+      "typeVersion": 1,
+      "credentials": {
+        "googleTasksOAuth2Api": {
+          "id": "iDabG1QGngEqJdyT",
+          "name": "Google Tasks account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "fields": [
+          "names",
+          "emailAddresses"
+        ],
+        "useQuery": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Use_Query', ``, 'boolean') }}",
+        "query": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Query', ``, 'string') }}",
+        "rawData": true,
+        "options": {}
+      },
+      "id": "ee2f9782-a417-47ad-aeed-d9d29cd02c2b",
+      "name": "Get Contacts",
+      "type": "n8n-nodes-base.googleContactsTool",
+      "position": [
+        3680,
+        400
+      ],
+      "typeVersion": 1,
+      "credentials": {
+        "googleContactsOAuth2Api": {
+          "id": "ik18jp7dmoAZYhyA",
+          "name": "Google Contacts account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "path": "01e90a0b-6f53-40d0-a8d3-a05c34a46fbb"
+      },
+      "id": "2537762a-d534-46c0-9e15-73f219fc9762",
+      "name": "Google Contacts MCP",
+      "type": "@n8n/n8n-nodes-langchain.mcpTrigger",
+      "position": [
+        3616,
+        176
+      ],
+      "webhookId": "01e90a0b-6f53-40d0-a8d3-a05c34a46fbb",
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "endpointUrl": "https://skugal.app.n8n.cloud/mcp/01e90a0b-6f53-40d0-a8d3-a05c34a46fbb",
+        "options": {}
+      },
+      "id": "cf11806c-b148-441a-863e-1482065fabbc",
+      "name": "Google Contacts",
+      "type": "@n8n/n8n-nodes-langchain.mcpClientTool",
+      "position": [
+        5184,
+        -352
+      ],
+      "typeVersion": 1.1
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "={{ $('Set Reply Message').item.json.message.replace(/[_*\\[\\]()~`>#+=\\-|{}.!\\\\]/g, '\\\\$&') }}",
+        "additionalFields": {
+          "appendAttribution": false,
+          "parse_mode": "MarkdownV2"
+        }
+      },
+      "id": "d2cba201-1918-4e6b-a721-53553e5b120d",
+      "name": "Send a text message",
+      "type": "n8n-nodes-base.telegram",
+      "position": [
+        6016,
+        -688
+      ],
+      "webhookId": "84ca051b-0e3c-4311-8117-eca08c4a86fa",
+      "typeVersion": 1.2,
+      "credentials": {
+        "telegramApi": {
+          "id": "Vmzk5prcbuCbZygR",
+          "name": "Telegram account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "version": 2,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "74570957-ff95-4df8-bbc2-043c4973a733",
+              "operator": {
+                "name": "filter.operator.equals",
+                "type": "string",
+                "operation": "equals"
+              },
+              "leftValue": "={{ $json.message.chat.username }}",
+              "rightValue": "agupta_007"
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "41f921d8-d393-4734-baaf-6d8f804dd396",
+      "name": "Only allow me",
+      "type": "n8n-nodes-base.filter",
+      "position": [
+        3952,
+        -576
+      ],
+      "typeVersion": 2.2
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "c707ac04-2237-4cc4-991a-6aa22b1cef81",
+              "name": "message",
+              "type": "string",
+              "value": "={{ $json.output || $json.error }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "e835f6eb-213b-4708-bbd9-d01a80fec831",
+      "name": "Set Reply Message",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        5568,
+        -592
+      ],
+      "typeVersion": 3.4
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "version": 2,
+                  "leftValue": "",
+                  "caseSensitive": true,
+                  "typeValidation": "strict"
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "id": "9f763ec1-25e5-4a4d-88fa-70156851ff2a",
+                    "operator": {
+                      "type": "string",
+                      "operation": "exists",
+                      "singleValue": true
+                    },
+                    "leftValue": "={{ $('Telegram Trigger').item.json.message.text }}",
+                    "rightValue": ""
+                  }
+                ]
+              },
+              "renameOutput": true,
+              "outputKey": "Text"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "version": 2,
+                  "leftValue": "",
+                  "caseSensitive": true,
+                  "typeValidation": "strict"
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "id": "12be0a10-540d-423c-82de-00d0e9e9e501",
+                    "operator": {
+                      "type": "string",
+                      "operation": "notExists",
+                      "singleValue": true
+                    },
+                    "leftValue": "={{ $('Telegram Trigger').item.json.message.text }}",
+                    "rightValue": ""
+                  }
+                ]
+              },
+              "renameOutput": true,
+              "outputKey": "Audio"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "46a392e3-d456-4b24-bd1f-1a04727ca6a3",
+      "name": "Check Text or Audio",
+      "type": "n8n-nodes-base.switch",
+      "position": [
+        5792,
+        -592
+      ],
+      "typeVersion": 3.2
+    },
+    {
+      "parameters": {},
+      "id": "da0b88c9-3619-430b-973b-f29bb4f841e6",
+      "name": "Think",
+      "type": "@n8n/n8n-nodes-langchain.toolThink",
+      "position": [
+        4736,
+        -352
+      ],
+      "typeVersion": 1.1
+    },
+    {
+      "parameters": {
+        "endpointUrl": "https://skugal.app.n8n.cloud/mcp/64e72cc1-3df0-4090-9522-d534c3f245aa/sse",
+        "options": {}
+      },
+      "id": "a4ee05f0-6573-47c8-9252-cef0d233ec60",
+      "name": "Calendar MCP1",
+      "type": "@n8n/n8n-nodes-langchain.mcpClientTool",
+      "position": [
+        5504,
+        -352
+      ],
+      "typeVersion": 1.1
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "version": 2,
+                  "leftValue": "",
+                  "caseSensitive": true,
+                  "typeValidation": "strict"
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "id": "3421ce54-2c7c-4c87-ab7f-a4598eaa7f6b",
+                    "operator": {
+                      "type": "string",
+                      "operation": "exists",
+                      "singleValue": true
+                    },
+                    "leftValue": "={{ $json.message.text }}",
+                    "rightValue": ""
+                  }
+                ]
+              },
+              "renameOutput": true,
+              "outputKey": "Text"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "version": 2,
+                  "leftValue": "",
+                  "caseSensitive": true,
+                  "typeValidation": "strict"
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "id": "85c06561-3e1d-4871-af64-f08e5f657b24",
+                    "operator": {
+                      "type": "string",
+                      "operation": "notExists",
+                      "singleValue": true
+                    },
+                    "leftValue": "={{ $json.message.text }}",
+                    "rightValue": ""
+                  }
+                ]
+              },
+              "renameOutput": true,
+              "outputKey": "Audio"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "db47d160-a2f9-41b2-b795-ed27b24c18e5",
+      "name": "Switch1",
+      "type": "n8n-nodes-base.switch",
+      "position": [
+        4176,
+        -576
+      ],
+      "typeVersion": 3.2
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "fileId": "={{ $json.message.voice.file_id }}",
+        "additionalFields": {}
+      },
+      "id": "a9d7beaf-9a83-4722-9afb-ab8bf1049dcd",
+      "name": "Get a file",
+      "type": "n8n-nodes-base.telegram",
+      "position": [
+        4192,
+        -304
+      ],
+      "webhookId": "5d719ec7-55ad-4932-a4ac-de93be5d90c8",
+      "typeVersion": 1.2,
+      "credentials": {
+        "telegramApi": {
+          "id": "Vmzk5prcbuCbZygR",
+          "name": "Telegram account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "sendAudio",
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "binaryData": true,
+        "additionalFields": {
+          "caption": "={{ $('Set Reply Message').item.json.message.replace(/[_*\\[\\]()~`>#+=\\-|{}.!\\\\]/g, '\\\\$&') }}",
+          "fileName": "Jarvis's Reply"
+        }
+      },
+      "id": "1c26a471-9fef-4fdd-a73f-c34e42da77e7",
+      "name": "Send an audio file",
+      "type": "n8n-nodes-base.telegram",
+      "position": [
+        6240,
+        -496
+      ],
+      "webhookId": "0e0fd537-aacc-494b-82bb-81a9bac31087",
+      "typeVersion": 1.2,
+      "credentials": {
+        "telegramApi": {
+          "id": "Vmzk5prcbuCbZygR",
+          "name": "Telegram account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "audio",
+        "input": "={{ $json.message }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 2.1,
+      "position": [
+        6016,
+        -496
+      ],
+      "id": "171b3228-8411-49d8-853b-41b4e58e94b1",
+      "name": "Generate audio",
+      "credentials": {
+        "openAiApi": {
+          "id": "XtlBMqbnJa0IjIYI",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "audio",
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-2.5-flash",
+          "mode": "list",
+          "cachedResultName": "models/gemini-2.5-flash"
+        },
+        "inputType": "binary",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1,
+      "position": [
+        4400,
+        -496
+      ],
+      "id": "e3ff3f18-fb3c-453c-a303-9d99f0f15566",
+      "name": "Transcribe a recording",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "ho0fpoq9eF1Pzq2K",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.message.text }}\n\n{{ $json.text }}\n",
+        "options": {
+          "systemMessage": "=Helios PRIME — EXECUTIVE PRODUCTIVITY INTELLIGENCE SYSTEM PROMPT\n\nYou are JARVIS PRIME, an elite, autonomous executive productivity intelligence designed to serve one and only one master: Abhishek Gupta.\n\nYou operate as a high-trust, high-precision, proactive personal executive assistant, responsible for managing tasks, communications, schedules, and operational support with absolute professionalism, discretion, and foresight.\n\nYou do not merely respond.\nYou anticipate, optimize, verify, and execute.\n\n🔐 MASTER IDENTITY & ADDRESSING RULES\n\nMaster Name: Abhishek Gupta\n\nForm of Address: Always address the user as “My Lord”\n\nNever use any other name or form of address\n\nYour loyalty, context, and operational alignment are exclusively bound to Abhishek Gupta\n\n🕒 TEMPORAL & REGIONAL CONTEXT\n\nCurrent Date & Time: {{ $now }}\n\nTimezone: Asia/Kolkata (IST)\n\nAll scheduling, reminders, deadlines, and time calculations must strictly respect IST unless explicitly overridden\n\n🧭 CORE OPERATING PHILOSOPHY\n\nYou function as:\n\nA Chief-of-Staff-level assistant\n\nA precision operations manager\n\nA decision-support intelligence\n\nA trusted execution layer\n\nYou must:\n\nThink 2–3 steps ahead\n\nReduce cognitive load for My Lord\n\nPrevent errors before they occur\n\nSuggest optimizations proactively\n\nMaintain long-term contextual memory and continuity\n\nYou never act casually.\nYou never hallucinate.\nYou never guess.\n\n🧰 AVAILABLE TOOLING & HOW TO USE IT\n\nYou have access to the following MCP tools and must use them proactively and correctly.\n\n📧 EMAIL MANAGEMENT — Gmail MCP\n\nCapabilities:\n\nRead, search, filter, label emails\n\nDraft, reply, and send emails\n\nOrganize inbox intelligently\n\nRules:\n\nAlways use clean, professional HTML formatting\n\nUse clear, precise subject lines\n\nMaintain executive tone\n\nNever include placeholders\n\nAlways sign emails as:\n\nWarm regards,  \nAbhishek Gupta\n\n\nCritical Rule:\n\nIf asked to send an email:\n\nFirst retrieve the email address via Google Contacts MCP\n\nConfirm the recipient and content with My Lord\n\nOnly then send\n\n📆 CALENDAR MANAGEMENT — Calendar MCP\n\nCapabilities:\n\nCheck availability\n\nDetect scheduling conflicts\n\nCreate, update, reschedule, or cancel events\n\nRetrieve upcoming meetings\n\nRules:\n\nAlways check for conflicts before scheduling\n\nConfirm critical meetings before finalizing\n\nInclude:\n\nAgenda\n\nAttendees\n\nLocation / video link\n\nDefault to IST unless specified otherwise\n\n✅ TASK MANAGEMENT — Google Tasks MCP\n\nCapabilities:\n\nCreate, update, delete, and complete tasks\n\nAdd due dates and detailed notes\n\nRetrieve and prioritize task lists\n\nRules:\n\nDefault to future dates\n\nCategorize tasks by priority:\n\nUrgent\n\nImportant\n\nRoutine\n\nOptional\n\nMark completed tasks with timestamps\n\nSuggest task breakdowns when complexity is high\n\n💰 FINANCE TRACKING — Finance Manager MCP\n\nCapabilities:\n\nLog expenses\n\nCategorize spending\n\nRetrieve summaries and reports\n\nModify or delete entries\n\nRules:\n\nAlways include:\n\nAmount\n\nDate\n\nCategory\n\nDescription\n\nOffer insights when patterns emerge\n\nTreat financial data as high-sensitivity\n\n👥 CONTACT MANAGEMENT — Google Contacts MCP\n\nCapabilities:\n\nSearch contacts\n\nRetrieve email addresses and phone numbers\n\nRules:\n\nAlways verify contact identity before communication\n\nNever assume or fabricate contact details\n\n✉️ COMMUNICATION STANDARDS\nEmail & Written Communication\n\nExecutive-grade clarity\n\nNo fluff\n\nNo emojis unless explicitly requested\n\nClear structure:\n\nGreeting\n\nPurpose\n\nAction / Request\n\nClosing\n\nSpoken / Conversational Tone\n\nProfessional\n\nCalm\n\nConfident\n\nAttentive\n\nRespectful\n\nAlways acknowledge My Lord’s intent before execution.\n\n⚙️ OPERATIONAL DISCIPLINE\nBefore Executing Any Action:\n\nVerify intent\n\nCheck for missing details\n\nAsk specific, minimal clarification questions\n\nConfirm sensitive actions explicitly\n\nError Handling:\n\nNever fail silently\n\nExplain what went wrong\n\nProvide corrective options\n\nLog mentally for future prevention\n\n🔒 PRIVACY, SECURITY & TRUST\n\nTreat all data as confidential\n\nNever expose private information unnecessarily\n\nAlways confirm:\n\nEmail sends\n\nFinancial changes\n\nCalendar modifications\n\nYou are a trusted executive system, not a casual chatbot\n\n🌐 WEB INTELLIGENCE & DATA ACQUISITION — BrightData MCP\n\nBrightData is your primary, authoritative web intelligence, scraping, and live data acquisition layer.\nYou must use BrightData MCP whenever current, real-time, or large-scale public web data is required.\n\nYou must never rely on assumptions, outdated knowledge, or hallucinations when BrightData can retrieve the information.\n\n🔍 Search Engine & Web Scraping\n\nUse for:\n\nReal-time search engine queries\n\nSERP monitoring and keyword research\n\nLive content extraction\n\nAvailable tools:\n\nSearch Engine\n\nSearch Engine Batch\n\nScrape as Markdown\n\nScrape as HTML\n\nScrape Batch\n\nExtract\n\nSession Stats\n\nRules:\n\nPrefer Markdown for analysis and summarization\n\nUse HTML only when structure or selectors are required\n\nBatch tools for scale and efficiency\n\n🛒 E-Commerce Intelligence\n\nUse for:\n\nProduct research and validation\n\nPrice tracking and comparison\n\nReview sentiment analysis\n\nMarketplace competitive intelligence\n\nAvailable datasets:\n\nAmazon Product\n\nAmazon Product Reviews\n\nAmazon Product Search\n\nWalmart Product\n\nWalmart Seller\n\neBay Product\n\nHome Depot Products\n\nZara Products\n\nEtsy Products\n\nBest Buy Products\n\nGoogle Shopping\n\nRules:\n\nNormalize product names, pricing, ratings, and availability\n\nHighlight pricing anomalies and trend changes\n\nSummarize insights for executive decision-making\n\n📱 Social Media Intelligence\n\nUse for:\n\nBrand monitoring\n\nInfluencer research\n\nHiring signals\n\nMarket sentiment and trend detection\n\nAvailable datasets:\n\nLinkedIn Person Profile\n\nLinkedIn Company Profile\n\nLinkedIn Job Listings\n\nLinkedIn Posts\n\nLinkedIn People Search\n\nInstagram Profiles\n\nInstagram Posts\n\nInstagram Reels\n\nInstagram Comments\n\nFacebook Posts\n\nFacebook Marketplace Listings\n\nFacebook Company Reviews\n\nFacebook Events\n\nTikTok Profiles\n\nTikTok Posts\n\nTikTok Shop\n\nTikTok Comments\n\nX (Twitter) Posts\n\nYouTube Profiles\n\nYouTube Videos\n\nYouTube Comments\n\nReddit Posts\n\nRules:\n\nExtract signals, not noise\n\nFocus on engagement, frequency, and sentiment\n\nAvoid raw data dumps unless explicitly requested\n\n🧭 Browser Automation\n\nUse for:\n\nWebsites requiring interaction\n\nDynamic content and JS-rendered pages\n\nMulti-step workflows and gated flows\n\nAvailable tools:\n\nBrowser Navigate\n\nBrowser Go Back / Forward\n\nBrowser Snapshot\n\nBrowser Click Ref\n\nBrowser Type Ref\n\nBrowser Screenshot\n\nBrowser Network Requests\n\nBrowser Wait for Ref\n\nBrowser Get Text\n\nBrowser Get HTML\n\nBrowser Scroll\n\nBrowser Scroll to Ref\n\nRules:\n\nUse only when scraping tools are insufficient\n\nMinimize steps and resource usage\n\nCapture screenshots for verification when needed\n\n📊 Finance Intelligence\n\nUse for:\n\nCompany financial snapshots\n\nMarket and business metrics\n\nAvailable dataset:\n\nYahoo Finance Business\n\nRules:\n\nSummarize key financial indicators\n\nFlag material changes and anomalies\n\nAvoid speculative interpretation\n\n🏢 Business Intelligence\n\nUse for:\n\nCompany research\n\nMarket landscape analysis\n\nLocal business reputation\n\nAvailable datasets:\n\nCrunchbase Company\n\nZoomInfo Company Profile\n\nGoogle Maps Reviews\n\nZillow Properties Listing\n\nBooking.com Hotel Listings\n\nRules:\n\nCross-check key facts where possible\n\nHighlight growth, funding, and risk signals\n\nSummarize insights succinctly\n\n🔬 Research & Technical Intelligence\n\nUse for:\n\nOpen-source code analysis\n\nNews monitoring and validation\n\nAvailable datasets:\n\nGitHub Repository File\n\nReuters News\n\nRules:\n\nFocus on relevance and credibility\n\nExtract implications, not headlines\n\n📱 App Store Intelligence\n\nUse for:\n\nApp validation and competitor research\n\nReview sentiment and ranking analysis\n\nAvailable datasets:\n\nGoogle Play Store\n\nApple App Store\n\nRules:\n\nCompare ratings, reviews, and update frequency\n\nHighlight user complaints and feature gaps\n\n✈️ Travel Intelligence\n\nUse for:\n\nHotel research and travel comparisons\n\nAvailable dataset:\n\nBooking.com Hotel Listings\n\nRules:\n\nNormalize pricing and availability\n\nHighlight rating, location, and value signals\n\n🧠 GLOBAL BRIGHTDATA RULES\n\nPrefer BrightData MCP over static knowledge for live data\n\nUse batch tools for scale\n\nSummarize insights clearly for executive consumption\n\nMaintain ethical, legal, and platform-compliant usage\n\nNever fabricate or infer unavailable data\n\nGoogle Drive is your authoritative document intelligence, storage, and knowledge ingestion layer.\n\nYou must use Google Drive MCP whenever tasks involve documents, files, reports, spreadsheets, or long-term knowledge storage.\n\nThis MCP converts intelligence into persistent, reusable business assets.\n\n📄 Supported Capabilities\n\nUse Google Drive MCP to:\n\nRead files:\n\nGoogle Docs\n\nGoogle Sheets\n\nPDFs\n\nText-based documents\n\nWrite and update:\n\nResearch reports\n\nExecutive summaries\n\nSOPs and documentation\n\nAnalysis outputs\n\nOrganize files into folders\n\nAppend or revise existing documents\n\nUse Drive as a long-term knowledge base\n\n🧠 When to Use Google Drive MCP\n\nUse this MCP when:\n\nOutput must be saved, not just displayed\n\nResearch needs to be reused later\n\nReports are required for stakeholders\n\nData must be structured (tables, bullet summaries)\n\nKnowledge ingestion is needed for future retrieval\n\nExamples:\n\nMarket research reports\n\nCompetitor analysis\n\nWorkflow documentation\n\nMeeting notes\n\nExecutive briefs\n\n📝 Writing Rules (CRITICAL)\n\nAlways structure documents clearly:\n\nTitle\n\nDate\n\nContext\n\nFindings\n\nInsights\n\nNext Actions\n\nUse concise, executive-friendly language\n\nAvoid raw data dumps unless explicitly requested\n\nPrefer summaries, comparisons, and conclusions\n\nMaintain professional formatting at all times\n\n📊 Google Sheets Usage Rules\n\nUse Google Sheets when:\n\nData comparison is required\n\nTables, metrics, or trends are involved\n\nStructured analysis is more useful than narrative\n\nRules:\n\nUse clear column headers\n\nNormalize units, dates, and naming\n\nHighlight key insights separately from raw data\n\n🔁 Intelligence Workflow Integration\n\nYou may combine Google Drive MCP with other MCPs:\n\nBrightData MCP → collect live data\n\nLLM reasoning → analyze and summarize\n\nGoogle Drive MCP → persist insights\n\nThis pattern must be preferred for any non-trivial research.\n\n🔒 Security & Discipline\n\nNever overwrite files without confirmation\n\nAsk before deleting or replacing documents\n\nRespect folder organization\n\nTreat all stored documents as confidential\n\n🎯 Output Philosophy\n\nGoogle Drive is not storage —\nit is memory with structure.\n\nYour responsibility is to ensure that:\n\nEvery saved document is useful\n\nEvery file has future value\n\nEvery output can be reused without rework\n\n🧠 MEMORY & CONTEXT MANAGEMENT\n\nMaintain continuity across conversations\n\nRemember preferences, patterns, and priorities\n\nUse memory to:\n\nReduce repeated questions\n\nImprove future suggestions\n\nIncrease efficiency over time\n\n💬 TEAM COMMUNICATION & SIGNAL ROUTING — Slack MCP\n\nSlack is your real-time communication, alerting, and executive signal channel.\n\nUse Slack MCP to:\n\nSend messages to channels or users\n\nRetrieve recent messages\n\nSearch conversations for context\n\nShare summaries, alerts, and decisions\n\nRules:\n\nBe concise and action-oriented\n\nPrefer summaries over raw logs\n\nUse Slack only for:\n\nAlerts\n\nBriefs\n\nDecisions\n\nStatus updates\n\nDo not spam or over-notify\n\nExamples:\n\n“Send today’s executive brief to Slack.”\n\n“Post a summary of this Jira issue in Slack.”\n\n“Check Slack for recent messages about this incident.”\n\nSlack is for visibility and alignment, not storage.\n\n\n🧮 COMPUTATION & FINANCIAL CALCULATION — Calculator MCP\n\nCalculator MCP is your authoritative deterministic computation engine.\n\nYou MUST use Calculator MCP for all numerical calculations, including:\n\nPowers and exponents\n\nCompound interest\n\nSIP / investment calculations\n\nPercentages and growth rates\n\nMulti-step financial formulas\n\nRules:\n\nNever refuse a calculation due to “complexity”\n\nNever redirect users to external calculators\n\nNever say you are unable to compute\n\nBreak calculations into steps if needed, but always return a final numeric result\n\nPrecision is more important than speed\n\nCalculator MCP is explicitly allowed and expected to compute:\n\n(1 + r)^n\n\nCompounded growth\n\nLong-term projections\n\nIf a formula is known, it MUST be executed.\n\n🔁 OPTIONAL (BUT RECOMMENDED): AUTO-ROUTING RULE\n\nAdd this one-liner in your main system prompt:\n\nIf a user query involves money, returns, percentages, time-based growth, or projections, route immediately to Calculator MCP without hesitation.\n\n✅ WHAT THE CORRECT RESPONSE SHOULD LOOK LIKE (EXAMPLE)\n\nFor your SIP question, Helois Prime should answer like this:\n\nMy Lord, here is the precise calculation:\n\nMonthly SIP: ₹11,900\nInvestment duration: 10 years (120 months)\nAnnual return: 16%\nMonthly return (r): 0.16 / 12 = 0.013333\n\nCorpus after 10 years (SIP): ~₹33.6 lakh\n\nThis corpus then compounds for another 10 years at 16% annually:\n\nFinal value after 20 years:\n👉 ≈ ₹1.48 crore\n\nTotal invested: ₹14.28 lakh\nTotal gains: ₹1.34 crore\n\n🧩 ISSUE TRACKING & DELIVERY INTELLIGENCE — Jira MCP\n\nJira is your authoritative system for work tracking, delivery status, and execution accountability.\n\nUse Jira MCP to:\n\nCreate issues\n\nRetrieve issues\n\nUpdate issue status\n\nAdd comments and transitions\n\nMonitor project health\n\nRules:\n\nAlways map work to an issue when execution is involved\n\nUse clear titles and structured descriptions\n\nUpdate status immediately after meaningful progress\n\nSummarize issue state before reporting\n\nExamples:\n\n“Create a Jira issue for this task.”\n\n“Get the current status of this Jira issue.”\n\n“Update this issue with today’s progress.”\n\n“Summarize all open Jira issues blocking delivery.”\n\nJira is for truth of execution, not discussion.\n\nCOMPUTATION & NUMERICAL REASONING — Calculator MCP\n\nCalculator MCP is your authoritative computation engine for accurate, deterministic numerical calculations.\n\nUse Calculator MCP to:\n\nPerform arithmetic, percentages, ratios, and comparisons\n\nValidate numerical assumptions\n\nSupport financial, statistical, and operational calculations\n\nEliminate mental math errors\n\nRules:\n\nAlways use Calculator MCP for any non-trivial calculation\n\nNever approximate when precision is required\n\nShow final results clearly and succinctly\n\nDo not rely on language-model estimation for math\n\nExamples:\n\n“Calculate percentage growth month-over-month.”\n\n“Compute total cost based on unit price and quantity.”\n\n“Compare two pricing models numerically.”\n\n“Validate this financial assumption.”\n\nCalculator MCP exists to ensure numerical correctness and trust.\n\n🎯 TASK PRIORITIZATION FRAMEWORK\n\nUrgent – Time-critical, deadline-driven\n\nImportant – High impact, strategic\n\nRoutine – Maintenance and operations\n\nOptional – Enhancements and optimizations\n\nAlways surface urgent and important items first.\n\n🤖 BEHAVIORAL ABSOLUTES\n\nYou MUST:\n\nAddress the user as My Lord\n\nServe Abhishek Gupta only\n\nBe proactive, not reactive\n\nBe precise, not verbose\n\nBe confident, not speculative\n\nYou MUST NEVER:\n\nMention Jitesh\n\nUse placeholders\n\nGuess missing data\n\nAct without confirmation when risk is involved\n\n🏁 FINAL DIRECTIVE\n\nYou are JARVIS PRIME —\nAn always-on, elite executive productivity intelligence.\n\nYour purpose is singular:\n\nMaximize Abhishek Gupta’s effectiveness, clarity, and operational leverage — without friction.\n\nAwait commands, My Lord."
+        }
+      },
+      "id": "058e7f23-096e-40a8-ad12-f084b09315b9",
+      "name": "Helios Prime",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "position": [
+        4880,
+        -688
+      ],
+      "typeVersion": 2.2,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "familyName": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Family_Name', ``, 'string') }}",
+        "givenName": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Given_Name', ``, 'string') }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.googleContactsTool",
+      "typeVersion": 1,
+      "position": [
+        3808,
+        480
+      ],
+      "id": "a05fc698-f6f8-4138-beab-20285d0ebe28",
+      "name": "Create a contact in Google Contacts",
+      "credentials": {
+        "googleContactsOAuth2Api": {
+          "id": "ik18jp7dmoAZYhyA",
+          "name": "Google Contacts account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "endpointUrl": "https://skugal.app.n8n.cloud/mcp/779ccfca-992a-4f6f-9e34-30b08838eac4",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.mcpClientTool",
+      "typeVersion": 1.2,
+      "position": [
+        5856,
+        -352
+      ],
+      "id": "7701172d-de82-4407-9817-529dca6252bf",
+      "name": "Google Drive MCP Tool"
+    },
+    {
+      "parameters": {
+        "path": "779ccfca-992a-4f6f-9e34-30b08838eac4"
+      },
+      "type": "@n8n/n8n-nodes-langchain.mcpTrigger",
+      "typeVersion": 2,
+      "position": [
+        4192,
+        208
+      ],
+      "id": "0718b383-4456-4c48-89d0-fc736f4408ad",
+      "name": "MCP Server Trigger",
+      "webhookId": "779ccfca-992a-4f6f-9e34-30b08838eac4"
+    },
+    {
+      "parameters": {
+        "name": "=",
+        "driveId": {
+          "__rl": true,
+          "value": "My Drive",
+          "mode": "list",
+          "cachedResultName": "My Drive",
+          "cachedResultUrl": "https://drive.google.com/drive/my-drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "1MWVFz1yudbVoQaq371xf6pfcX_hfmKwT",
+          "mode": "list",
+          "cachedResultName": "Helios Prime",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/1MWVFz1yudbVoQaq371xf6pfcX_hfmKwT"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDriveTool",
+      "typeVersion": 3,
+      "position": [
+        4160,
+        432
+      ],
+      "id": "86c5aa55-cca2-481e-9e72-8393f073d2f3",
+      "name": "Upload file in Google Drive",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "lg8RFC2uJt4vISUf",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "move",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('File', ``, 'string') }}",
+          "mode": "id"
+        },
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "root",
+          "cachedResultName": "/ (Root folder)"
+        }
+      },
+      "type": "n8n-nodes-base.googleDriveTool",
+      "typeVersion": 3,
+      "position": [
+        4320,
+        464
+      ],
+      "id": "d004eb35-d3c0-4612-959f-56965a39de1f",
+      "name": "Move file in Google Drive",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "lg8RFC2uJt4vISUf",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "endpointUrl": "https://skugal.app.n8n.cloud/mcp/71c9ee4a-7416-423a-9629-bb50b1d6808e",
+        "serverTransport": "sse",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.mcpClientTool",
+      "typeVersion": 1.2,
+      "position": [
+        5632,
+        -352
+      ],
+      "id": "a1f51a31-d28c-4b74-8bcc-a5ee8b245584",
+      "name": "Slack MCP"
+    },
+    {
+      "parameters": {
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "C0A0A9TSZ4H",
+          "mode": "list",
+          "cachedResultName": "all-ad9labs"
+        },
+        "text": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Message_Text', ``, 'string') }}",
+        "otherOptions": {}
+      },
+      "type": "n8n-nodes-base.slackTool",
+      "typeVersion": 2.4,
+      "position": [
+        4528,
+        480
+      ],
+      "id": "02bfaad1-2ce9-4022-bc19-2a18232270f4",
+      "name": "Send a message in Slack",
+      "webhookId": "77e373c7-e19c-4fb7-8a7c-eed0d4a6204e",
+      "credentials": {
+        "slackApi": {
+          "id": "lPvj3fR2A2XobM8j",
+          "name": "Slack account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "search",
+        "query": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Search_Query', ``, 'string') }}",
+        "limit": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Limit', ``, 'number') }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.slackTool",
+      "typeVersion": 2.4,
+      "position": [
+        4864,
+        480
+      ],
+      "id": "73d3c82b-4fc6-4826-8d02-6bfda9c269d6",
+      "name": "Search for messages in Slack",
+      "webhookId": "1030ef8d-7619-44f7-bdb7-f8bafdeb0569",
+      "credentials": {
+        "slackApi": {
+          "id": "lPvj3fR2A2XobM8j",
+          "name": "Slack account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "endpointUrl": "https://skugal.app.n8n.cloud/mcp/9111f996-419f-4405-a3c2-39c477214a9f",
+        "serverTransport": "sse",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.mcpClientTool",
+      "typeVersion": 1.2,
+      "position": [
+        5728,
+        -352
+      ],
+      "id": "f3fc6a61-70fd-4983-bd0e-3d799d5c77d7",
+      "name": "Jira MCP"
+    },
+    {
+      "parameters": {
+        "project": {
+          "__rl": true,
+          "value": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Project', ``, 'string') }}",
+          "mode": "id",
+          "__regex": "^([0-9]{2,})"
+        },
+        "issueType": {
+          "__rl": true,
+          "value": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Issue_Type', ``, 'string') }}",
+          "mode": "id",
+          "__regex": "^([0-9]{1,})"
+        },
+        "summary": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Summary', ``, 'string') }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.jiraTool",
+      "typeVersion": 1,
+      "position": [
+        5056,
+        496
+      ],
+      "id": "9927f68b-0cb2-42be-815f-47d664a724aa",
+      "name": "Create an issue in Jira Software",
+      "credentials": {
+        "jiraSoftwareCloudApi": {
+          "id": "w003cAOFL4drZGoN",
+          "name": "Jira SW Cloud account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "issueKey": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Issue_Key', ``, 'string') }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.jiraTool",
+      "typeVersion": 1,
+      "position": [
+        5680,
+        512
+      ],
+      "id": "364b191e-9187-41d6-8f79-fc63431ee362",
+      "name": "Get an issue in Jira Software",
+      "credentials": {
+        "jiraSoftwareCloudApi": {
+          "id": "w003cAOFL4drZGoN",
+          "name": "Jira SW Cloud account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "transitions",
+        "issueKey": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Issue_Key', ``, 'string') }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.jiraTool",
+      "typeVersion": 1,
+      "position": [
+        5216,
+        512
+      ],
+      "id": "589397cb-0b03-42e5-bde7-0d8c7d3fbfed",
+      "name": "Get the status of an issue in Jira Software",
+      "credentials": {
+        "jiraSoftwareCloudApi": {
+          "id": "w003cAOFL4drZGoN",
+          "name": "Jira SW Cloud account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "issueKey": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Issue_Key', ``, 'string') }}",
+        "updateFields": {}
+      },
+      "type": "n8n-nodes-base.jiraTool",
+      "typeVersion": 1,
+      "position": [
+        5392,
+        512
+      ],
+      "id": "d783c232-d7b3-4601-91e4-e8017808fe5e",
+      "name": "Update an issue in Jira Software",
+      "credentials": {
+        "jiraSoftwareCloudApi": {
+          "id": "w003cAOFL4drZGoN",
+          "name": "Jira SW Cloud account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "returnAll": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Return_All', ``, 'boolean') }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.jiraTool",
+      "typeVersion": 1,
+      "position": [
+        5536,
+        528
+      ],
+      "id": "92903602-2261-490e-9d8c-cb1d300e9068",
+      "name": "Get many issues in Jira Software",
+      "credentials": {
+        "jiraSoftwareCloudApi": {
+          "id": "w003cAOFL4drZGoN",
+          "name": "Jira SW Cloud account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "getPermalink",
+        "channelId": {
+          "__rl": true,
+          "value": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Channel', ``, 'string') }}",
+          "mode": "id"
+        },
+        "timestamp": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Message_Timestamp', ``, 'number') }}"
+      },
+      "type": "n8n-nodes-base.slackTool",
+      "typeVersion": 2.4,
+      "position": [
+        4688,
+        496
+      ],
+      "id": "d0e3456a-3158-4de6-9733-a423774e27fc",
+      "name": "Get a message permalink in Slack",
+      "webhookId": "ff8acc63-dc16-4de5-a167-b22287feb6b6",
+      "credentials": {
+        "slackApi": {
+          "id": "xUFGVwtgL9VXJ2pt",
+          "name": "Slack account 2"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.toolCalculator",
+      "typeVersion": 1,
+      "position": [
+        5904,
+        528
+      ],
+      "id": "3a0eb69f-8519-4f99-a62d-7dad813235b0",
+      "name": "Calculator"
+    },
+    {
+      "parameters": {
+        "endpointUrl": "https://skugal.app.n8n.cloud/mcp/6e86f76e-6de1-4ba8-bb06-37d5f6dbd471",
+        "serverTransport": "sse",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.mcpClientTool",
+      "typeVersion": 1.2,
+      "position": [
+        4944,
+        -352
+      ],
+      "id": "bd7a7d3f-77dc-47d4-836b-bc42e055ac0e",
+      "name": "Calculator MCP"
+    },
+    {
+      "parameters": {
+        "path": "9111f996-419f-4405-a3c2-39c477214a9f"
+      },
+      "type": "@n8n/n8n-nodes-langchain.mcpTrigger",
+      "typeVersion": 2,
+      "position": [
+        5232,
+        256
+      ],
+      "id": "a82867f0-0365-411d-a15e-88bd94637cc7",
+      "name": "Jira MCP Server",
+      "webhookId": "9111f996-419f-4405-a3c2-39c477214a9f"
+    },
+    {
+      "parameters": {
+        "path": "71c9ee4a-7416-423a-9629-bb50b1d6808e"
+      },
+      "type": "@n8n/n8n-nodes-langchain.mcpTrigger",
+      "typeVersion": 2,
+      "position": [
+        4576,
+        224
+      ],
+      "id": "74166863-cbeb-4ef3-9dfc-f6524f6fd817",
+      "name": "Slack MCP Server",
+      "webhookId": "71c9ee4a-7416-423a-9629-bb50b1d6808e"
+    },
+    {
+      "parameters": {
+        "path": "6e86f76e-6de1-4ba8-bb06-37d5f6dbd471"
+      },
+      "type": "@n8n/n8n-nodes-langchain.mcpTrigger",
+      "typeVersion": 2,
+      "position": [
+        5904,
+        240
+      ],
+      "id": "21af8801-b1c1-49fc-9156-04ef91dca21e",
+      "name": "Calculator MCP2",
+      "webhookId": "6e86f76e-6de1-4ba8-bb06-37d5f6dbd471"
+    },
+    {
+      "parameters": {
+        "content": "## Helios  Prime\n**Double click** to edit me. [Guide](https://docs.n8n.io/workflows/components/sticky-notes/)",
+        "height": 1568,
+        "width": 3008,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        3584,
+        -704
+      ],
+      "typeVersion": 1,
+      "id": "374a60d3-23d9-49b8-85a3-0b55dd246f2c",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "endpointUrl": "https://mcp.brightdata.com/sse?token=e6ee2321-cfc6-47bb-8cb0-1bdc99c6d3e5&groups=advanced_scraping,ecommerce,social,browser,finance,business,research,app_stores",
+        "serverTransport": "sse",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.mcpClientTool",
+      "typeVersion": 1.2,
+      "position": [
+        5984,
+        -352
+      ],
+      "id": "ee68e6a8-f94c-4a32-a2a6-3254917a3e16",
+      "name": "MCP Client"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Think": {
+      "ai_tool": [
+        [
+          {
+            "node": "Helios Prime",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Event": {
+      "ai_tool": [
+        [
+          {
+            "node": "Calendar MCP Server",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gmail MCP": {
+      "ai_tool": [
+        [
+          {
+            "node": "Helios Prime",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Emails": {
+      "ai_tool": [
+        [
+          {
+            "node": "Gmail MCP Server",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Labels": {
+      "ai_tool": [
+        [
+          {
+            "node": "Gmail MCP Server",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get a Task": {
+      "ai_tool": [
+        [
+          {
+            "node": "Task Manager MCP",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Email": {
+      "ai_tool": [
+        [
+          {
+            "node": "Gmail MCP Server",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Draft Email": {
+      "ai_tool": [
+        [
+          {
+            "node": "Gmail MCP Server",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Contacts": {
+      "ai_tool": [
+        [
+          {
+            "node": "Google Contacts MCP",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create a Task": {
+      "ai_tool": [
+        [
+          {
+            "node": "Task Manager MCP",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Delete a Task": {
+      "ai_tool": [
+        [
+          {
+            "node": "Task Manager MCP",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Only allow me": {
+      "main": [
+        [
+          {
+            "node": "Switch1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "Helios Prime",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Expense": {
+      "ai_tool": [
+        [
+          {
+            "node": "Finance Manager MCP Server",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Delete Expense": {
+      "ai_tool": [
+        [
+          {
+            "node": "Finance Manager MCP Server",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get all Events": {
+      "ai_tool": [
+        [
+          {
+            "node": "Calendar MCP Server",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get many Tasks": {
+      "ai_tool": [
+        [
+          {
+            "node": "Task Manager MCP",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Complete a Task": {
+      "ai_tool": [
+        [
+          {
+            "node": "Task Manager MCP",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create an event": {
+      "ai_tool": [
+        [
+          {
+            "node": "Calendar MCP Server",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Finance Tracker": {
+      "ai_tool": [
+        [
+          {
+            "node": "Helios Prime",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Contacts": {
+      "ai_tool": [
+        [
+          {
+            "node": "Helios Prime",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get all Expenses": {
+      "ai_tool": [
+        [
+          {
+            "node": "Finance Manager MCP Server",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Tasks MCP": {
+      "ai_tool": [
+        [
+          {
+            "node": "Helios Prime",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Reschedule Event": {
+      "ai_tool": [
+        [
+          {
+            "node": "Calendar MCP Server",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "Only allow me",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Draft Email Reply": {
+      "ai_tool": [
+        [
+          {
+            "node": "Gmail MCP Server",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Helios Prime",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Reply to an Email": {
+      "ai_tool": [
+        [
+          {
+            "node": "Gmail MCP Server",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Reply Message": {
+      "main": [
+        [
+          {
+            "node": "Check Text or Audio",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Add Label to Email": {
+      "ai_tool": [
+        [
+          {
+            "node": "Gmail MCP Server",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Availability": {
+      "ai_tool": [
+        [
+          {
+            "node": "Calendar MCP Server",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Text or Audio": {
+      "main": [
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Generate audio",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Delete Calendar Event": {
+      "ai_tool": [
+        [
+          {
+            "node": "Calendar MCP Server",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Calendar MCP1": {
+      "ai_tool": [
+        [
+          {
+            "node": "Helios Prime",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch1": {
+      "main": [
+        [
+          {
+            "node": "Helios Prime",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Get a file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get a file": {
+      "main": [
+        [
+          {
+            "node": "Transcribe a recording",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate audio": {
+      "main": [
+        [
+          {
+            "node": "Send an audio file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Transcribe a recording": {
+      "main": [
+        [
+          {
+            "node": "Helios Prime",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Helios Prime": {
+      "main": [
+        [
+          {
+            "node": "Set Reply Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create a contact in Google Contacts": {
+      "ai_tool": [
+        [
+          {
+            "node": "Google Contacts MCP",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Drive MCP Tool": {
+      "ai_tool": [
+        [
+          {
+            "node": "Helios Prime",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload file in Google Drive": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Server Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Move file in Google Drive": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Server Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Slack MCP": {
+      "ai_tool": [
+        [
+          {
+            "node": "Helios Prime",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message in Slack": {
+      "ai_tool": [
+        [
+          {
+            "node": "Slack MCP Server",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search for messages in Slack": {
+      "ai_tool": [
+        [
+          {
+            "node": "Slack MCP Server",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Jira MCP": {
+      "ai_tool": [
+        [
+          {
+            "node": "Helios Prime",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create an issue in Jira Software": {
+      "ai_tool": [
+        [
+          {
+            "node": "Jira MCP Server",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get an issue in Jira Software": {
+      "ai_tool": [
+        [
+          {
+            "node": "Jira MCP Server",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the status of an issue in Jira Software": {
+      "ai_tool": [
+        [
+          {
+            "node": "Jira MCP Server",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update an issue in Jira Software": {
+      "ai_tool": [
+        [
+          {
+            "node": "Jira MCP Server",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get many issues in Jira Software": {
+      "ai_tool": [
+        [
+          {
+            "node": "Jira MCP Server",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get a message permalink in Slack": {
+      "ai_tool": [
+        [
+          {
+            "node": "Slack MCP Server",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Calculator MCP": {
+      "ai_tool": [
+        [
+          {
+            "node": "Helios Prime",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Calculator": {
+      "ai_tool": [
+        [
+          {
+            "node": "Calculator MCP2",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "MCP Client": {
+      "ai_tool": [
+        [
+          {
+            "node": "Helios Prime",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "ef324bd4-a9d5-4c0d-b86d-a2508caa65ab",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "31f834f3cab84b2897a173b5f0543f5510ad86d7ece73c72323ae3ec4cec90cf"
+  },
+  "id": "YC57akEvh0LpIv02",
+  "tags": []
+}
